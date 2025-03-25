@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renovasi Timeline - Northwest Central</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --success-color: #198754;
+            --danger-color: #dc3545;
+            --warning-color: #fd7e14;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container-fluid {
+            padding: 20px;
+        }
+        
+        .dashboard-header {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .dashboard-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            height: 100%;
+            transition: transform 0.2s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header i {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .progress {
+            height: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            margin-bottom: 0;
+        }
+        
+        .stat-change {
+            font-size: 0.85rem;
+            margin-left: 5px;
+        }
+        
+        .stat-change.positive {
+            color: var(--success-color);
+        }
+        
+        .stat-change.negative {
+            color: var(--danger-color);
+        }
+        
+        .timeline-container {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-bottom: 20px;
+            padding-left: 20px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background-color: #ddd;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: -18px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            border: 2px solid white;
+        }
+        
+        .timeline-dot.completed {
+            background-color: var(--success-color);
+        }
+        
+        .timeline-dot.pending {
+            background-color: var(--warning-color);
+        }
+        
+        .timeline-dot.future {
+            background-color: var(--secondary-color);
+        }
+        
+        .timeline-date {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-content {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .component-table {
+            font-size: 0.85rem;
+        }
+        
+        .component-image {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .worker-badge {
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            display: inline-block;
+            font-size: 0.85rem;
+        }
+        
+        .worker-badge i {
+            margin-right: 5px;
+        }
+        
+        .price-tag {
+            color: var(--danger-color);
+            font-weight: 600;
+        }
+        
+        .gantt-chart {
+            height: 300px;
+            position: relative;
+        }
+        
+        .gantt-row {
+            height: 40px;
+            margin-bottom: 5px;
+            position: relative;
+        }
+        
+        .gantt-row-label {
+            position: absolute;
+            left: 0;
+            width: 150px;
+            height: 100%;
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+            font-size: 0.85rem;
+            padding: 10px;
+            text-align: right;
+        }
+        
+        .gantt-row-timeline {
+            position: absolute;
+            left: 150px;
+            right: 0;
+            height: 100%;
+            background-color: #f8f9fa;
+        }
+        
+        .gantt-bar {
+            position: absolute;
+            height: 20px;
+            top: 10px;
+            border-radius: 5px;
+            background-color: var(--primary-color);
+        }
+        
+        .gantt-bar.completed {
+            background-color: var(--success-color);
+        }
+        
+        .gantt-bar.in-progress {
+            background-color: var(--warning-color);
+        }
+        
+        .gantt-bar.future {
+            background-color: var(--secondary-color);
+            opacity: 0.6;
+        }
+        
+        .component-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-right: 3px;
+            margin-bottom: 3px;
+            background-color: #e9ecef;
+        }
+        
+        .worker-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .task-progress-container {
+            width: 100%;
+            height: 25px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .task-progress-bar {
+            height: 100%;
+            background-color: var(--success-color);
+        }
+        
+        .task-progress-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #212529;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .back-link {
+            margin-bottom: 20px;
+        }
+        
+        .small-chart {
+            height: 200px;
+        }
+        
+        .budget-summary {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .budget-item {
+            text-align: center;
+            padding: 10px;
+            flex: 1;
+        }
+        
+        .budget-item-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .budget-item-label {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="back-link">
+            <a href="house.html" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i> Kembali ke Detail Rumah
+            </a>
+        </div>
+        
+        <div class="dashboard-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2>Timeline Renovasi <span id="component-name">Struktur Bangunan</span></h2>
+                    <p class="text-secondary mb-0" id="house-type">Freja Attic - ID Properti: #1234</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="d-flex justify-content-md-end align-items-center">
+                        <span class="badge bg-warning me-2">Sedang Renovasi</span>
+                        <button class="btn btn-outline-primary btn-sm ms-2">
+                            <i class="bi bi-printer"></i> Cetak Laporan
+                        </button>
+                        <button class="btn btn-outline-success btn-sm ms-2">
+                            <i class="bi bi-share"></i> Bagikan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- KPI Cards -->
+            <div class="col-md-3">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <span>Progres Renovasi</span>
+                        <i class="bi bi-bar-chart-line"></i>
+                    </div>
+                    <h2 class="stat-value">68%</h2>
+                    <div class="progress mt-2">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 68%" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="stat-label mt-2">
+                        Updated today
+                        <span class="stat-change positive">
+                            <i class="bi bi-arrow-up"></i> 3%
+                        </span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <span>Anggaran Terpakai</span>
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <h2 class="stat-value">Rp 43,250,000</h2>
+                    <div class="progress mt-2">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 76%" aria-valuenow="76" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="stat-label mt-2">
+                        Dari Rp 57,000,000
+                        <span class="stat-change negative">
+                            <i class="bi bi-arrow-up"></i> 2.3%
+                        </span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <span>Waktu Tersisa</span>
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <h2 class="stat-value">18 Hari</h2>
+                    <div class="progress mt-2">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="stat-label mt-2">
+                        Dari 30 Hari
+                        <span class="stat-change positive">
+                            <i class="bi bi-arrow-down"></i> 2 hari
+                        </span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <span>Tenaga Kerja</span>
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <h2 class="stat-value">12</h2>
+                    <div class="progress mt-2">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="stat-label mt-2">
+                        Total Jam Kerja: 1,236 jam
+                        <span class="stat-change positive">
+                            <i class="bi bi-arrow-up"></i> 5%
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Gantt Chart -->
+            <div class="col-md-8">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <span>Jadwal Renovasi</span>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary me-1">Harian</button>
+                            <button class="btn btn-sm btn-primary">Mingguan</button>
+                        </div>
+                    </div>
+                    <div>
+                        <canvas id="ganttChart" height="180"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Budget Breakdown -->
+            <div class="col-md-4">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <span>Distribusi Anggaran</span>
+                        <i class="bi bi-pie-chart"></i>
+                    </div>
+                    <div class="small-chart">
+                        <canvas id="budgetChart"></canvas>
+                    </div>
+                    <div class="budget-summary">
+                        <div class="budget-item">
+                            <div class="budget-item-value">65%</div>
+                            <div class="budget-item-label">Material</div>
+                        </div>
+                        <div class="budget-item">
+                            <div class="budget-item-value">28%</div>
+                            <div class="budget-item-label">Tenaga Kerja</div>
+                        </div>
+                        <div class="budget-item">
+                            <div class="budget-item-value">7%</div>
+                            <div class="budget-item-label">Lain-lain</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Timeline Detail -->
+            <div class="col-md-6">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <span>Timeline Aktivitas</span>
+                        <i class="bi bi-calendar2-week"></i>
+                    </div>
+                    <div class="timeline-container">
+                        <div class="timeline-item">
+                            <div class="timeline-dot completed"></div>
+                            <div class="timeline-date">5 Maret 2025</div>
+                            <div class="timeline-title">Inspeksi Awal</div>
+                            <div class="timeline-content">
+                                Insinyur melakukan inspeksi struktur bangunan dan mengidentifikasi area yang perlu diperbaiki.
+                            </div>
+                            <div class="worker-badge">
+                                <i class="bi bi-person"></i> Ir. Budi Santoso
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-dot completed"></div>
+                            <div class="timeline-date">7 Maret 2025</div>
+                            <div class="timeline-title">Pengukuran & Persiapan Material</div>
+                            <div class="timeline-content">
+                                Tim mengukur area dan menyiapkan material yang dibutuhkan. Pemesanan beton bertulang dan kerangka baja.
+                            </div>
+                            <div>
+                                <div class="worker-badge">
+                                    <i class="bi bi-people"></i> Tim Pengukuran (3 orang)
+                                </div>
+                                <div class="worker-badge">
+                                    <i class="bi bi-box-seam"></i> Logistik
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-dot completed"></div>
+                            <div class="timeline-date">10 Maret 2025</div>
+                            <div class="timeline-title">Pengujian Beban & Kekuatan Material</div>
+                            <div class="timeline-content">
+                                Melakukan pengujian struktur eksisting untuk memastikan keamanan selama renovasi.
+                            </div>
+                            <div>
+                                <div class="worker-badge">
+                                    <i class="bi bi-tools"></i> Tim Teknis (2 orang)
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-dot completed"></div>
+                            <div class="timeline-date">12-15 Maret 2025</div>
+                            <div class="timeline-title">Perbaikan Kolom Utama</div>
+                            <div class="timeline-content">
+                                Penguatan 4 kolom utama di lantai 1 menggunakan carbon fiber reinforcement.
+                            </div>
+                            <div>
+                                <div class="worker-badge">
+                                    <i class="bi bi-hammer"></i> Tim Konstruksi (5 orang)
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-dot pending"></div>
+                            <div class="timeline-date">16-20 Maret 2025</div>
+                            <div class="timeline-title">Penggantian Balok Lantai 2</div>
+                            <div class="timeline-content">
+                                Penggantian balok horizontal yang mengalami kerusakan di lantai 2 dengan balok beton bertulang baru.
+                            </div>
+                            <div class="task-progress-container mt-2 mb-2">
+                                <div class="task-progress-bar" style="width: 60%"></div>
+                                <div class="task-progress-text">60% Selesai</div>
+                            </div>
+                            <div>
+                                <div class="worker-badge">
+                                    <i class="bi bi-hammer"></i> Tim Konstruksi (8 orang)
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-dot future"></div>
+                            <div class="timeline-date">21-25 Maret 2025</div>
+                            <div class="timeline-title">Renovasi Struktur Atap</div>
+                            <div class="timeline-content">
+                                Perbaikan struktur atap, penguatan kuda-kuda dan penggantian reng yang rusak.
+                            </div>
+                            <div>
+                                <div class="worker-badge">
+                                    <i class="bi bi-hammer"></i> Tim Atap (4 orang)
+                                </div>
+                                <div class="worker-badge">
+                                    <i class="bi bi-tools"></i> Supervisor
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-dot future"></div>
+                            <div class="timeline-date">26-30 Maret 2025</div>
+                            <div class="timeline-title">Pengujian Akhir & Finishing</div>
+                            <div class="timeline-content">
+                                Pengujian kekuatan struktur baru, finishing, dan pembersihan area renovasi.
+                            </div>
+                            <div>
+                                <div class="worker-badge">
+                                    <i class="bi bi-clipboard-check"></i> Tim Quality Control
+                                </div>
+                                <div class="worker-badge">
+                                    <i class="bi bi-brush"></i> Tim Finishing
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Component Detail -->
+            <div class="col-md-6">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <span>Detail Komponen & Material</span>
+                        <i class="bi bi-box"></i>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover component-table">
+                            <thead>
+                                <tr>
+                                    <th width="40"></th>
+                                    <th>Komponen</th>
+                                    <th>Jumlah</th>
+                                    <th>Harga Satuan</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <img src="beton.jpg" alt="Beton" class="component-image">
+                                    </td>
+                                    <td>
+                                        Beton Bertulang K350
+                                        <div>
+                                            <span class="component-tag">Kolom</span>
+                                            <span class="component-tag">Struktur</span>
+                                        </div>
+                                    </td>
+                                    <td>8 m³</td>
+                                    <td>Rp 1,200,000</td>
+                                    <td>Rp 9,600,000</td>
+                                    <td><span class="badge bg-success">Terpasang</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src="baja-ringan.jpg" alt="Baja Ringan" class="component-image">
+                                    </td>
+                                    <td>
+                                        Baja Tulangan D16
+                                        <div>
+                                            <span class="component-tag">Balok</span>
+                                            <span class="component-tag">Lantai 2</span>
+                                        </div>
+                                    </td>
+                                    <td>450 kg</td>
+                                    <td>Rp 18,000</td>
+                                    <td>Rp 8,100,000</td>
+                                    <td><span class="badge bg-success">Terpasang</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src="carbon-fiber.jpg" alt="Carbon Fiber" class="component-image">
+                                    </td>
+                                    <td>
+                                        Carbon Fiber Reinforcement
+                                        <div>
+                                            <span class="component-tag">Kolom</span>
+                                            <span class="component-tag">Utama</span>
+                                        </div>
+                                    </td>
+                                    <td>24 m²</td>
+                                    <td>Rp 850,000</td>
+                                    <td>Rp 20,400,000</td>
+                                    <td><span class="badge bg-success">Terpasang</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src="balok-kayu.png" alt="Balok Kayu" class="component-image">
+                                    </td>
+                                    <td>
+                                        Balok Beton Pracetak
+                                        <div>
+                                            <span class="component-tag">Lantai 2</span>
+                                        </div>
+                                    </td>
+                                    <td>6 unit</td>
+                                    <td>Rp 1,750,000</td>
+                                    <td>Rp 10,500,000</td>
+                                    <td><span class="badge bg-warning">Sedang Dipasang (60%)</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src="atap.jpg" alt="Atap" class="component-image">
+                                    </td>
+                                    <td>
+                                        Rangka Atap Baja Ringan
+                                        <div>
+                                            <span class="component-tag">Atap</span>
+                                        </div>
+                                    </td>
+                                    <td>85 m²</td>
+                                    <td>Rp 185,000</td>
+                                    <td>Rp 15,725,000</td>
+                                    <td><span class="badge bg-secondary">Belum Dipasang</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h6>Tim Konstruksi</h6>
+                        <div class="d-flex flex-wrap">
+                            <div class="d-flex align-items-center me-3 mb-2">
+                                <img src="https://ui-avatars.com/api/?name=Agus+W&size=30" class="worker-avatar">
+                                <div>
+                                    <div class="fw-bold">Agus Widodo</div>
+                                    <div class="small text-secondary">Site Manager</div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center me-3 mb-2">
+                                <img src="https://ui-avatars.com/api/?name=Budi+S&size=30" class="worker-avatar">
+                                <div>
+                                    <div class="fw-bold">Budi Santoso</div>
+                                    <div class="small text-secondary">Insinyur Struktur</div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center me-3 mb-2">
+                                <img src="https://ui-avatars.com/api/?name=Dewi+A&size=30" class="worker-avatar">
+                                <div>
+                                    <div class="fw-bold">Dewi Anggraini</div>
+                                    <div class="small text-secondary">Supervisor</div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center me-3 mb-2">
+                                <img src="https://ui-avatars.com/api/?name=Team&size=30" class="worker-avatar">
+                                <div>
+                                    <div class="fw-bold">9 Pekerja Lainnya</div>
+                                    <div class="small text-secondary">Tukang & Helper</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <h6>Biaya Tenaga Kerja</h6>
+                            <table class="table table-sm component-table">
+                                <thead>
+                                    <tr>
+                                        <th>Posisi</th>
+                                        <th>Tarif / Hari</th>
+                                        <th>Jumlah Hari</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Site Manager (1)</td>
+                                        <td>Rp 500,000</td>
+                                        <td>30</td>
+                                        <td>Rp 15,000,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Insinyur Struktur (1)</td>
+                                        <td>Rp 450,000</td>
+                                        <td>15</td>
+                                        <td>Rp 6,750,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Supervisor (1)</td>
+                                        <td>Rp 350,000</td>
+                                        <td>30</td>
+                                        <td>Rp 10,500,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tukang Ahli (3)</td>
+                                        <td>Rp 250,000</td>
+                                        <td>25</td>
+                                        <td>Rp 18,750,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tukang Biasa (4)</td>
+                                        <td>Rp 200,000</td>
+                                        <td>25</td>
+                                        <td>Rp 20,000,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Helper (2)</td>
+                                        <td>Rp 150,000</td>
+                                        <td>25</td>
+                                        <td>Rp 7,500,000</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="3">Total Biaya Tenaga Kerja</th>
+                                        <th>Rp 78,500,000</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Get component name from URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const componentName = urlParams.get('component') || 'Struktur Bangunan';
+            const houseType = urlParams.get('type') || 'Freja Attic';
+            const houseId = urlParams.get('id') || '1234';
+            
+            // Update page with component details
+            $('#component-name').text(componentName);
+            $('#house-type').text(`${houseType} - ID Properti: #${houseId}`);
+            
+            // Set up back link
+            $('.back-link a').attr('href', `house.html?id=${houseId}&type=${encodeURIComponent(houseType)}`);
+            
+            // --- Gantt Chart ---
+            const ctx = document.getElementById('ganttChart').getContext('2d');
+            
+            const ganttChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Inspeksi Awal', 'Pengukuran & Persiapan', 'Pengujian Beban', 'Perbaikan Kolom', 'Balok Lantai 2', 'Struktur Atap', 'Pengujian & Finishing'],
+                    datasets: [
+                        {
+                            label: 'Selesai',
+                            data: [1, 1, 1, 4, 3, 0, 0],
+                            backgroundColor: '#198754',
+                            barPercentage: 0.8,
+                            categoryPercentage: 0.6
+                        },
+                        {
+                            label: 'Sedang Dikerjakan',
+                            data: [0, 0, 0, 0, 2, 0, 0],
+                            backgroundColor: '#fd7e14',
+                            barPercentage: 0.8,
+                            categoryPercentage: 0.6
+                        },
+                        {
+                            label: 'Tersisa',
+                            data: [0, 0, 0, 0, 0, 5, 5],
+                            backgroundColor: '#6c757d',
+                            barPercentage: 0.8,
+                            categoryPercentage: 0.6
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw + ' hari';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            title: {
+                                display: true,
+                                text: 'Durasi (Hari)'
+                            }
+                        },
+                        y: {
+                            stacked: true
+                        }
+                    }
+                }
+            });
+            
+            // --- Budget Chart ---
+            const budgetCtx = document.getElementById('budgetChart').getContext('2d');
+            
+            const budgetChart = new Chart(budgetCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Material', 'Tenaga Kerja', 'Lain-lain'],
+                    datasets: [{
+                        data: [65, 28, 7],
+                        backgroundColor: ['#0d6efd', '#20c997', '#6c757d'],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${context.label}: ${percentage}%`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Northwest Central Map</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+
+    <style>
+      #map {
+        height: 80vh;
+        width: 100%;
+        border-radius: 8px;
+      }
+      .info-panel {
+        padding: 10px;
+        background: white;
+        border-radius: 5px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      }
+      .container {
+        margin-top: 20px;
+      }
+      .detail-panel {
+        height: 80vh;
+        overflow-y: auto;
+      }
+      .detail-card {
+        height: 100%;
+      }
+      .house-selected {
+        background-color: #f8f9fa;
+        border-left: 4px solid #198754;
+      }
+      .property-label {
+        font-weight: 600;
+        color: #495057;
+      }
+      .ethereum-address {
+        font-family: monospace;
+        font-size: 0.85rem;
+        word-break: break-all;
+      }
+      .status-badge {
+        font-size: 0.85rem;
+        padding: 0.35em 0.65em;
+      }
+      .vacant-status {
+        font-weight: 600;
+      }
+      .condition-status {
+        font-weight: 600;
+      }
+      .map-legend {
+        font-size: 0.85rem;
+        color: #495057;
+      }
+      .map-legend h5 {
+        font-size: 1rem;
+        font-weight: 600;
+      }
+      .map-legend .badge {
+        font-size: 0.75rem;
+      }
+      .map-legend p {
+        margin-bottom: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="mb-3 text-center">Northwest Central Map</h1>
+
+      <div class="row">
+        <!-- Map Column (Left) -->
+        <div class="col-lg-8">
+          <div class="card mb-3">
+            <div class="card-body">
+              <div id="map"></div>
+            </div>
+          </div>
+
+          <!-- Map Legend (below map) -->
+          <div class="card mb-4">
+            <div class="card-body map-legend py-2">
+              <div class="row">
+                <div class="col-md-4">
+                  <h5 class="mb-2">Informasi Peta</h5>
+                  <p class="mb-2">
+                    Peta ini menampilkan area Northwest Central dengan cluster
+                    rumah.
+                  </p>
+                </div>
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="col-6 col-md-3">
+                      <p>
+                        <span class="badge bg-primary">Biru</span> - Batas area
+                        utama
+                      </p>
+                    </div>
+                    <div class="col-6 col-md-3">
+                      <p>
+                        <span class="badge bg-success">Hijau</span> - Rumah
+                        individual
+                      </p>
+                    </div>
+                    <div class="col-6 col-md-3">
+                      <p>
+                        <span class="badge bg-danger">Merah</span> - Rumah yang
+                        disorot
+                      </p>
+                    </div>
+                    <div class="col-6 col-md-3">
+                      <p>
+                        <span class="badge bg-info">Biru</span> - Rumah yang
+                        dipilih
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Only visible on small screens -->
+          <div class="card d-block d-lg-none mb-4">
+            <div class="card-body">
+              <h5 class="card-title">Informasi</h5>
+              <p class="card-text">
+                Arahkan kursor ke rumah untuk menyorot dan klik untuk melihat
+                detail di panel kanan.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Details Column (Right) -->
+        <div class="col-lg-4">
+          <div class="card detail-card">
+            <div class="card-body detail-panel">
+              <h5 class="card-title">Informasi Properti</h5>
+              <div id="detail-content">
+                <div class="alert alert-info">
+                  <p>Klik pada rumah untuk melihat detailnya</p>
+                </div>
+
+                <!-- House details will be displayed here -->
+                <div id="house-details" class="d-none">
+                  <div class="d-flex justify-content-between align-items-center mt-3">
+                    <h6 class="mb-0">ID Properti: <span id="house-id"></span></h6>
+                    <a id="view-details-btn" href="#" class="btn btn-primary btn-sm">
+                      <i class="bi bi-eye"></i> Lihat Detail
+                    </a>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-md-12">
+                      <table class="table table-borderless">
+                        <tbody>
+                          <tr>
+                            <th scope="row" class="property-label">Pemilik</th>
+                            <td id="house-owner">-</td>
+                          </tr>
+                          <tr>
+                            <th scope="row" class="property-label">
+                              Tipe Rumah
+                            </th>
+                            <td id="house-type">-</td>
+                          </tr>
+                          <tr>
+                            <th scope="row" class="property-label">
+                              Luas Tanah
+                            </th>
+                            <td><span id="land-area">-</span> m²</td>
+                          </tr>
+                          <tr>
+                            <th scope="row" class="property-label">
+                              Luas Bangunan
+                            </th>
+                            <td><span id="building-area">-</span> m²</td>
+                          </tr>
+                          <tr>
+                            <th scope="row" class="property-label">Status</th>
+                            <td id="house-status-container">-</td>
+                          </tr>
+                          <tr>
+                            <th scope="row" class="property-label">Vacant</th>
+                            <td id="house-vacant">-</td>
+                          </tr>
+                          <tr>
+                            <th scope="row" class="property-label">
+                              Kondisi Rumah
+                            </th>
+                            <td id="house-condition">-</td>
+                          </tr>
+                          <tr>
+                            <th scope="row" class="property-label">SHM ID</th>
+                            <td>
+                              <span id="shm-id" class="ethereum-address"
+                                >-</span
+                              >
+                            </td>
+                          </tr>
+                          <tr id="occupant-row">
+                            <th scope="row" class="property-label">
+                              Penghuni ID
+                            </th>
+                            <td>
+                              <span id="occupant-id" class="ethereum-address"
+                                >-</span
+                              >
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Leaflet JS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+
+    <script>
+      $(document).ready(function () {
+        // Initialize the map
+        const map = L.map("map").setView([-7.25, 112.618], 16);
+
+        // Add OpenStreetMap tile layer
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        }).addTo(map);
+
+        // Style for the main area (dashed blue line with almost complete transparency)
+        const areaStyle = {
+          color: "#0d6efd",
+          weight: 2,
+          opacity: 0.5,
+          fillOpacity: 0.05,
+          dashArray: "5, 5",
+        };
+
+        // Default style for houses
+        const houseStyle = {
+          color: "#198754",
+          weight: 2,
+          opacity: 0.7,
+          fillOpacity: 0.4,
+        };
+
+        // Highlighted style for houses on hover
+        const highlightStyle = {
+          color: "#dc3545",
+          weight: 3,
+          opacity: 1,
+          fillOpacity: 0.7,
+        };
+
+        // Selected style for clicked houses (changed to blue)
+        const selectedStyle = {
+          color: "#0dcaf0", // Bootstrap info blue
+          weight: 3,
+          opacity: 1,
+          fillOpacity: 0.7,
+        };
+
+        // Load house types from JSON file
+        let houseTypes = [];
+        $.getJSON("northwest-central-house-type.json", function (data) {
+          houseTypes = data.products.map((product) => product.name);
+        });
+
+        // Create info panel on map
+        const info = L.control();
+        info.onAdd = function (map) {
+          this._div = L.DomUtil.create("div", "info-panel");
+          this.update();
+          return this._div;
+        };
+        info.update = function (props) {
+          this._div.innerHTML =
+            "<h6>Informasi Rumah</h6>" +
+            (props ? "ID Properti: " + props.id : "Arahkan kursor ke rumah");
+        };
+        info.addTo(map);
+
+        // Function to generate random ethereum address
+        function generateEthAddress() {
+          let address = "0x";
+          const chars = "0123456789abcdef";
+          for (let i = 0; i < 40; i++) {
+            address += chars.charAt(Math.floor(Math.random() * chars.length));
+          }
+          return address;
+        }
+
+        // Function to get status badge based on property status
+        function getStatusBadge(status) {
+          let badgeClass = "";
+
+          switch (status) {
+            case "Dijual":
+              badgeClass = "bg-warning text-dark";
+              break;
+            case "Disewakan":
+              badgeClass = "bg-info text-dark";
+              break;
+            case "Off-market property":
+              badgeClass = "bg-secondary";
+              break;
+            default:
+              badgeClass = "bg-secondary";
+          }
+
+          return `<span class="badge ${badgeClass} status-badge">${status}</span>`;
+        }
+
+        // Function to get vacant status with color
+        function getVacantStatus(isVacant) {
+          if (isVacant) {
+            return '<span class="vacant-status text-danger">Ya</span>';
+          } else {
+            return '<span class="vacant-status text-success">Tidak</span>';
+          }
+        }
+
+        // Function to get house condition with color
+        function getHouseCondition(isGood) {
+          if (isGood) {
+            return '<span class="condition-status text-success">Bagus</span>';
+          } else {
+            return '<span class="condition-status text-danger">Perlu Renovasi</span>';
+          }
+        }
+
+        // Function to display house details in the right panel
+        function displayHouseDetails(properties) {
+          $("#house-details").removeClass("d-none");
+          $("#house-id").text(properties.id);
+
+          // Indonesian names
+          const owners = [
+            "Budi Santoso",
+            "Siti Rahayu",
+            "Agus Wijaya",
+            "Dewi Kusuma",
+            "Bambang Hermawan",
+            "Rina Wulandari",
+            "Dian Pratama",
+            "Eko Susanto",
+            "Maya Indah",
+            "Joko Purnomo",
+            "Lina Anggraini",
+            "Arief Rahman",
+          ];
+
+          // House types from the JSON file (fallback if not loaded yet)
+          const houseTypesList =
+            houseTypes.length > 0
+              ? houseTypes
+              : [
+                  "Gaia Attic",
+                  "Hera",
+                  "Gaia (5x15)",
+                  "Freja",
+                  "Hera Attic (6x12)",
+                  "Freja Attic (5x12)",
+                  "Iris Attic (6x15)",
+                  "Iris",
+                  "Jade",
+                  "Jade Attic",
+                ];
+
+          // Property statuses
+          const statuses = ["Disewakan", "Dijual", "Off-market property"];
+
+          // Generate random data
+          const randomOwner = owners[Math.floor(Math.random() * owners.length)];
+          const randomHouseType =
+            houseTypesList[Math.floor(Math.random() * houseTypesList.length)];
+          const randomLandArea = Math.floor(Math.random() * 71) + 80; // 80-150 m²
+          const randomBuildingArea = Math.floor(Math.random() * 71) + 100; // 100-170 m²
+          const randomStatus =
+            statuses[Math.floor(Math.random() * statuses.length)];
+          const isVacant = Math.random() > 0.7; // 30% chance to be vacant
+          const isGoodCondition = Math.random() > 0.3; // 70% chance to be in good condition
+          const shmId = generateEthAddress();
+          const occupantId = !isVacant ? generateEthAddress() : null;
+
+          // Set values to HTML elements
+          $("#house-owner").text(properties.owner || randomOwner);
+          $("#house-type").text(properties.type || randomHouseType);
+          $("#land-area").text(properties.landArea || randomLandArea);
+          $("#building-area").text(
+            properties.buildingArea || randomBuildingArea
+          );
+
+          // Set status with badge
+          const status = properties.status || randomStatus;
+          $("#house-status-container").html(getStatusBadge(status));
+
+          // Set vacant status with color
+          $("#house-vacant").html(getVacantStatus(isVacant));
+
+          // Set house condition with color
+          $("#house-condition").html(getHouseCondition(isGoodCondition));
+
+          $("#shm-id").text(properties.shmId || shmId);
+
+          if (!isVacant) {
+            $("#occupant-id").text(properties.occupantId || occupantId);
+            $("#occupant-row").show();
+          } else {
+            $("#occupant-row").hide();
+          }
+
+          // Update the View Details button link with all necessary parameters
+          $("#view-details-btn").attr("href", `house.html?id=${properties.id}&type=${encodeURIComponent(properties.type || randomHouseType)}&owner=${encodeURIComponent(properties.owner || randomOwner)}&landArea=${properties.landArea || randomLandArea}&buildingArea=${properties.buildingArea || randomBuildingArea}&status=${encodeURIComponent(status)}&vacant=${isVacant ? 'Ya' : 'Tidak'}&condition=${isGoodCondition ? 'bagus' : 'renovasi'}&shmId=${encodeURIComponent(properties.shmId || shmId)}&occupantId=${encodeURIComponent(!isVacant ? (properties.occupantId || occupantId) : '')}`);
+        }
+
+        // Variable to track the currently selected house layer
+        let selectedHouseLayer = null;
+
+        // Load the main area GeoJSON
+        $.getJSON("northwest-central.geojson", function (data) {
+          // Add main area to the map
+          L.geoJSON(data, {
+            style: areaStyle,
+          }).addTo(map);
+
+          // Fit the map to the area bounds
+          map.fitBounds(L.geoJSON(data).getBounds());
+        });
+
+        // Load the houses GeoJSON with hover and click functionality
+        $.getJSON("northwest-central-houses.geojson", function (data) {
+          // Add features and properties to each house
+          for (let i = 0; i < data.features.length; i++) {
+            if (!data.features[i].properties) {
+              data.features[i].properties = {};
+            }
+            data.features[i].properties.id = i + 1;
+          }
+
+          // Add houses to the map with interactive features
+          L.geoJSON(data, {
+            style: houseStyle,
+            onEachFeature: function (feature, layer) {
+              // Mouse events for highlighting and selection
+              layer.on({
+                mouseover: function (e) {
+                  const layer = e.target;
+                  if (layer !== selectedHouseLayer) {
+                    layer.setStyle(highlightStyle);
+                  }
+                  layer.bringToFront();
+                  info.update(feature.properties);
+                },
+                mouseout: function (e) {
+                  const layer = e.target;
+                  if (layer !== selectedHouseLayer) {
+                    layer.setStyle(houseStyle);
+                  }
+                  info.update();
+                },
+                click: function (e) {
+                  // Reset style of previously selected house
+                  if (selectedHouseLayer) {
+                    selectedHouseLayer.setStyle(houseStyle);
+                  }
+
+                  const layer = e.target;
+                  layer.setStyle(selectedStyle);
+                  selectedHouseLayer = layer;
+
+                  // Fit map to the selected house bounds
+                  map.fitBounds(layer.getBounds());
+
+                  // Display house details
+                  displayHouseDetails(feature.properties);
+                },
+              });
+            },
+          }).addTo(map);
+        });
+      });
+    </script>
+  </body>
+</html>

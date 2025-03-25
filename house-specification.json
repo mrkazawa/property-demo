@@ -1,0 +1,26 @@
+{
+    "house_specification": {
+      "name": "Gaia Attic",
+      "luas_tanah": 75,
+      "luas_bangunan": 110,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "carport": 1,
+      "details": {
+        "struktur_bangunan": "Konstruksi Beton Bertulang",
+        "pondasi": "Tiang Pancang",
+        "dinding": "Batu Bata Ringan",
+        "atap": "Rangka Galvalum dengan penutup genteng beton",
+        "plafon": "Rangka metal dengan Gypsum Board",
+        "lantai": {
+          "ruang_utama": "Granite Tile Kualitas Ekspor",
+          "kamar_mandi": "Granite Tile & Keramik Kualitas Ekspor"
+        },
+        "sanitair": "TOTO",
+        "kusen_pintu_jendela": "Kusen & Daun Jendela Aluminium",
+        "listrik": "PLN 3500 W / 4400 watt",
+        "instalasi_air_bersih": "Water Treatment Standard PDAM"
+      }
+    }
+  }
+  

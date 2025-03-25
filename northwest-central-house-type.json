@@ -1,0 +1,60 @@
+{
+  "products": [
+    {
+      "name": "Gaia Attic",
+      "luas_tanah": 75,
+      "luas_bangunan": 110
+    },
+    {
+      "name": "Hera",
+      "luas_tanah": 72,
+      "luas_bangunan": 108
+    },
+    {
+      "name": "Gaia (5x15)",
+      "luas_tanah": 75,
+      "luas_bangunan": 86
+    },
+    {
+      "name": "Freja",
+      "luas_tanah": 60,
+      "luas_bangunan": 86
+    },
+    {
+      "name": "Hera Attic (6x12)",
+      "luas_tanah": 72,
+      "luas_bangunan": 137
+    },
+    {
+      "name": "Freja Attic (5x12)",
+      "luas_tanah": 60,
+      "luas_bangunan": 110
+    },
+    {
+      "name": "Iris Attic (6x15)",
+      "luas_tanah": 90,
+      "luas_bangunan": 137
+    },
+    {
+      "name": "Iris",
+      "luas_tanah": 90,
+      "luas_bangunan": 108
+    },
+    {
+      "name": "Jade",
+      "luas_tanah": 105,
+      "luas_bangunan": {
+        "Superior": 114,
+        "Deluxe": 133
+      }
+    },
+    {
+      "name": "Jade Attic",
+      "luas_tanah": 105,
+      "luas_bangunan": {
+        "Superior": 152,
+        "Deluxe": 172
+      }
+    }
+  ]
+}

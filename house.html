@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>House Details - Northwest Central</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      .container {
+        margin-top: 30px;
+        margin-bottom: 30px;
+      }
+      .house-image {
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .property-label {
+        font-weight: 600;
+        color: #495057;
+      }
+      .ethereum-address {
+        font-family: monospace;
+        font-size: 0.85rem;
+        word-break: break-all;
+      }
+      .status-badge {
+        font-size: 0.85rem;
+        padding: 0.35em 0.65em;
+      }
+      .vacant-status {
+        font-weight: 600;
+      }
+      .condition-status {
+        font-weight: 600;
+      }
+      .specs-table th {
+        width: 40%;
+      }
+      .specs-container {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+      }
+      .condition-indicator {
+        text-align: center;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+      }
+      .condition-good {
+        background-color: rgba(25, 135, 84, 0.15);
+        border: 1px solid rgba(25, 135, 84, 0.3);
+      }
+      .condition-bad {
+        background-color: rgba(220, 53, 69, 0.15);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+      }
+      .condition-icon {
+        font-size: 2rem;
+        margin-bottom: 10px;
+      }
+      .back-link {
+        margin-bottom: 20px;
+      }
+      .detail-value {
+        word-break: break-word;
+      }
+      .spec-condition-badge {
+        display: inline-block;
+        padding: 0.25em 0.5em;
+        font-size: 0.75rem;
+        font-weight: 600;
+        border-radius: 4px;
+        margin-left: 8px;
+      }
+      .spec-condition-good {
+        background-color: rgba(25, 135, 84, 0.1);
+        color: #198754;
+        border: 1px solid rgba(25, 135, 84, 0.2);
+      }
+      .spec-condition-bad {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+        border: 1px solid rgba(220, 53, 69, 0.2);
+      }
+      .spec-condition-progress {
+        background-color: rgba(255, 153, 0, 0.1);
+        color: #fd7e14;
+        border: 1px solid rgba(255, 153, 0, 0.2);
+      }
+      .specs-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="back-link d-flex justify-content-between align-items-center">
+        <a href="index.html" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-arrow-left"></i> Kembali ke Peta
+        </a>
+        
+        <a href="timeline.html" id="timeline-btn" class="btn btn-warning btn-sm">
+          <i class="bi bi-clock-history"></i> Lihat Timeline Renovasi
+        </a>
+      </div>
+
+      <h2 class="mb-4">Detail Properti</h2>
+
+      <div class="row">
+        <!-- Left Side - Image -->
+        <div class="col-md-6 mb-4">
+          <img
+            src="Resize-Freja-Gaia-Attic.jpg"
+            alt="House Image"
+            class="house-image"
+          />
+        </div>
+
+        <!-- Right Side - Property Details -->
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title" id="house-type">Freja Attic</h4>
+
+              <table class="table table-borderless mt-3">
+                <tbody>
+                  <tr>
+                    <th scope="row" class="property-label">Pemilik</th>
+                    <td id="house-owner">Budi Santoso</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="property-label">Luas Tanah</th>
+                    <td><span id="land-area">90</span> m²</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="property-label">Luas Bangunan</th>
+                    <td><span id="building-area">110</span> m²</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="property-label">Status</th>
+                    <td id="house-status-container">
+                      <span class="badge bg-info text-dark status-badge"
+                        >Disewakan</span
+                      >
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="property-label">Vacant</th>
+                    <td id="house-vacant">
+                      <span class="vacant-status text-success">Tidak</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="property-label">Kondisi Rumah</th>
+                    <td id="house-condition">
+                      <span class="condition-status text-success">Bagus</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="property-label">SHM ID</th>
+                    <td>
+                      <span id="shm-id" class="ethereum-address"
+                        >0x8f731e31c44df5043a82ad2e3b4295c5bfda8d4e</span
+                      >
+                    </td>
+                  </tr>
+                  <tr id="occupant-row">
+                    <th scope="row" class="property-label">Penghuni ID</th>
+                    <td>
+                      <span id="occupant-id" class="ethereum-address"
+                        >0x3a95b394e0f5e1db59591e12a4d9d3f4fc8e799d</span
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Row - Specifications and Condition -->
+      <div class="row mt-4">
+        <!-- Specifications -->
+        <div class="col-md-12">
+          <div class="specs-container">
+            <h4 class="mb-3">Spesifikasi Rumah</h4>
+            <div id="specs-content">
+              <div class="text-center mb-3" id="loading-spinner">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Memuat spesifikasi rumah...</p>
+              </div>
+              <table class="table specs-table d-none" id="specs-table">
+                <tbody id="specs-table-body">
+                  <!-- Specifications will be loaded here from JSON -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        // Get query parameters from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const houseId = urlParams.get("id") || "1";
+        const houseType = urlParams.get("type") || "Freja Attic";
+        const condition = urlParams.get("condition") || "bagus";
+        const owner = urlParams.get("owner") || "Budi Santoso";
+        const landArea = urlParams.get("landArea") || "90";
+        const buildingArea = urlParams.get("buildingArea") || "110";
+        const status = urlParams.get("status") || "Disewakan";
+        const vacant = urlParams.get("vacant") || "Tidak";
+        const shmId = urlParams.get("shmId") || "0x8f731e31c44df5043a82ad2e3b4295c5bfda8d4e";
+        const occupantId = urlParams.get("occupantId") || "0x3a95b394e0f5e1db59591e12a4d9d3f4fc8e799d";
+
+        // IMPORTANT: Set the timeline button link FIRST, before anything else
+        $("#timeline-btn").attr("href", `timeline.html?id=${houseId}&type=${encodeURIComponent(houseType)}`);
+        
+        // Set page title
+        document.title = `${houseType} - Northwest Central`;
+
+        // Update property details
+        $("#house-type").text(houseType);
+        $("#house-owner").text(owner);
+        $("#land-area").text(landArea);
+        $("#building-area").text(buildingArea);
+        
+        // Set status with appropriate badge class
+        let badgeClass = "bg-info text-dark";
+        if (status === "Dijual") badgeClass = "bg-warning text-dark";
+        else if (status === "Off-market property") badgeClass = "bg-secondary";
+        
+        $("#house-status-container").html(`
+          <span class="badge ${badgeClass} status-badge">${status}</span>
+        `);
+        
+        // Set vacant status
+        const vacantClass = vacant === "Ya" ? "text-danger" : "text-success";
+        $("#house-vacant").html(`
+          <span class="vacant-status ${vacantClass}">${vacant}</span>
+        `);
+        
+        // Hide occupant row if vacant
+        if (vacant === "Ya") {
+          $("#occupant-row").hide();
+        }
+        
+        // Set SHM ID and Occupant ID
+        $("#shm-id").text(shmId);
+        $("#occupant-id").text(occupantId);
+
+        // Set condition based on URL parameter
+        if (condition.toLowerCase() === "bagus") {
+          $("#house-condition").html(
+            '<span class="condition-status text-success">Bagus</span>'
+          );
+        } else {
+          $("#house-condition").html(
+            '<span class="condition-status text-danger">Perlu Renovasi</span>'
+          );
+        }
+
+        // Condition options
+        const conditionOptions = [
+          { status: "Bagus", class: "spec-condition-good" },
+          { status: "Perlu Renovasi", class: "spec-condition-bad" },
+          { status: "Sedang Renovasi", class: "spec-condition-progress" }
+        ];
+
+        // Function to generate random condition status with weighted distribution
+        function getRandomCondition() {
+          const randVal = Math.random();
+          if (randVal > 0.65) {
+            return conditionOptions[1]; // Perlu Renovasi (35%)
+          } else if (randVal > 0.35) {
+            return conditionOptions[0]; // Bagus (30%)
+          } else {
+            return conditionOptions[2]; // Sedang Renovasi (35%)
+          }
+        }
+
+        // Load house specifications from JSON
+        $.ajax({
+          url: "house-specification.json",
+          dataType: "json",
+          success: function(data) {
+            console.log("JSON data loaded:", data);
+
+            if (data && data.house_specification) {
+              const spec = data.house_specification;
+              const tableBody = $("#specs-table-body");
+              
+              // Clear existing content
+              tableBody.empty();
+              
+              // Create a tracker for conditions to ensure each type appears at least once
+              let conditionTracker = {
+                "Bagus": 0,
+                "Perlu Renovasi": 0,
+                "Sedang Renovasi": 0
+              };
+              
+              // Skip basic specifications (bedrooms, bathrooms, carport)
+              
+              // Add detailed specifications
+              if (spec.details) {
+                const details = spec.details;
+                let entries = Object.entries(details);
+                let totalEntries = entries.length;
+                
+                // First pass - randomly assign conditions but track what's used
+                const conditions = [];
+                
+                // Process and prepare the data
+                entries.forEach(([key, value]) => {
+                  if (typeof value === 'string') {
+                    // Add a random condition
+                    conditions.push(getRandomCondition());
+                  } else if (typeof value === 'object' && key === 'lantai') {
+                    // Handle the nested lantai object (counts as 2 entries)
+                    conditions.push(getRandomCondition());
+                    conditions.push(getRandomCondition());
+                  }
+                });
+                
+                // Check if we have at least one of each condition type
+                // If not, make sure we add them by replacing some conditions
+                conditionOptions.forEach(option => {
+                  if (!conditions.some(c => c.status === option.status)) {
+                    // Replace a random condition with this one to ensure it appears
+                    const randomIndex = Math.floor(Math.random() * conditions.length);
+                    conditions[randomIndex] = option;
+                  }
+                });
+                
+                // Second pass - actually render the specs with the prepared conditions
+                let condIndex = 0;
+                
+                // Add each simple property
+                entries.forEach(([key, value]) => {
+                  if (typeof value === 'string') {
+                    // Get the assigned condition
+                    const conditionInfo = conditions[condIndex++];
+                    conditionTracker[conditionInfo.status]++;
+                    
+                    tableBody.append(`
+                      <tr>
+                        <th scope="row">${formatLabel(key)}</th>
+                        <td>
+                          <span class="detail-value">${value}</span>
+                          <span class="spec-condition-badge ${conditionInfo.class}">${conditionInfo.status}</span>
+                        </td>
+                      </tr>
+                    `);
+                  } else if (typeof value === 'object' && key === 'lantai') {
+                    // Handle the nested lantai object
+                    const conditionMain = conditions[condIndex++];
+                    const conditionBathroom = conditions[condIndex++];
+                    
+                    conditionTracker[conditionMain.status]++;
+                    conditionTracker[conditionBathroom.status]++;
+                    
+                    tableBody.append(`
+                      <tr>
+                        <th scope="row">Lantai Ruang Utama</th>
+                        <td>
+                          <span class="detail-value">${value.ruang_utama}</span>
+                          <span class="spec-condition-badge ${conditionMain.class}">${conditionMain.status}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Lantai Kamar Mandi</th>
+                        <td>
+                          <span class="detail-value">${value.kamar_mandi}</span>
+                          <span class="spec-condition-badge ${conditionBathroom.class}">${conditionBathroom.status}</span>
+                        </td>
+                      </tr>
+                    `);
+                  }
+                });
+                
+                console.log("Condition distribution:", conditionTracker);
+                
+                // After specs are loaded, check if we have any "Sedang Renovasi" items
+                // and update the timeline button accordingly
+                if (conditionTracker["Sedang Renovasi"] > 0) {
+                  // Find the first component that's being renovated
+                  const renovatingComponent = $(".spec-condition-badge:contains('Sedang Renovasi')")
+                    .first()
+                    .closest('tr')
+                    .find('th')
+                    .text();
+                    
+                  // Update timeline link with component info
+                  $("#timeline-btn").attr("href", 
+                    `timeline.html?id=${houseId}&type=${encodeURIComponent(houseType)}&component=${encodeURIComponent(renovatingComponent)}`
+                  );
+                }
+              }
+              
+              // Hide spinner and show table
+              $("#loading-spinner").hide();
+              $("#specs-table").removeClass("d-none");
+              
+            } else {
+              // Display message if no specifications found
+              $("#specs-content").html(
+                '<div class="alert alert-info">Tidak ada data spesifikasi tersedia.</div>'
+              );
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            console.error("Error loading JSON:", textStatus, errorThrown);
+            console.log("Response:", jqXHR.responseText);
+            
+            // Handle JSON loading error
+            $("#specs-content").html(
+              '<div class="alert alert-danger">Gagal memuat data spesifikasi. Error: ' + textStatus + '</div>'
+            );
+          }
+        });
+        
+        // Function to format label from snake_case to Title Case
+        function formatLabel(key) {
+          // Replace underscores with spaces and capitalize each word
+          return key.split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+        }
+
+        // IMPORTANT: Update ONLY the back button, not all links in the back-link div
+        $(".back-link a:first").attr("href", `index.html?selectedHouseId=${houseId}`);
+        
+        // Add direct click handler for timeline button to ensure it works
+        $("#timeline-btn").on("click", function(e) {
+          e.preventDefault(); // Prevent default action
+          e.stopPropagation(); // Prevent event bubbling
+          
+          // Get the current href attribute (which should be correct by now)
+          const timelineUrl = $(this).attr("href");
+          console.log("Navigating to timeline:", timelineUrl);
+          
+          // Navigate directly
+          window.location.href = timelineUrl;
+          
+          return false; // Extra safety to prevent default behavior
+        });
+      });
+    </script>
+  </body>
+</html>
