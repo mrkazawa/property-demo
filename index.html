@@ -160,9 +160,17 @@
 
                 <!-- House details will be displayed here -->
                 <div id="house-details" class="d-none">
-                  <div class="d-flex justify-content-between align-items-center mt-3">
-                    <h6 class="mb-0">ID Properti: <span id="house-id"></span></h6>
-                    <a id="view-details-btn" href="#" class="btn btn-primary btn-sm">
+                  <div
+                    class="d-flex justify-content-between align-items-center mt-3"
+                  >
+                    <h6 class="mb-0">
+                      ID Properti: <span id="house-id"></span>
+                    </h6>
+                    <a
+                      id="view-details-btn"
+                      href="#"
+                      class="btn btn-primary btn-sm"
+                    >
                       <i class="bi bi-eye"></i> Lihat Detail
                     </a>
                   </div>
@@ -250,9 +258,18 @@
     ></script>
 
     <script>
-      $(document).ready(function () {
+      // Function to initialize the map and all related features
+      function initializeMap() {
+        // Clear any existing map instance
+        if (window.mapInstance) {
+          window.mapInstance.remove();
+          window.mapInstance = null;
+        }
+
         // Initialize the map
         const map = L.map("map").setView([-7.25, 112.618], 16);
+        // Store map instance globally to clean up if needed
+        window.mapInstance = map;
 
         // Add OpenStreetMap tile layer
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -444,7 +461,24 @@
           }
 
           // Update the View Details button link with all necessary parameters
-          $("#view-details-btn").attr("href", `house.html?id=${properties.id}&type=${encodeURIComponent(properties.type || randomHouseType)}&owner=${encodeURIComponent(properties.owner || randomOwner)}&landArea=${properties.landArea || randomLandArea}&buildingArea=${properties.buildingArea || randomBuildingArea}&status=${encodeURIComponent(status)}&vacant=${isVacant ? 'Ya' : 'Tidak'}&condition=${isGoodCondition ? 'bagus' : 'renovasi'}&shmId=${encodeURIComponent(properties.shmId || shmId)}&occupantId=${encodeURIComponent(!isVacant ? (properties.occupantId || occupantId) : '')}`);
+          $("#view-details-btn").attr(
+            "href",
+            `house.html?id=${properties.id}&type=${encodeURIComponent(
+              properties.type || randomHouseType
+            )}&owner=${encodeURIComponent(
+              properties.owner || randomOwner
+            )}&landArea=${properties.landArea || randomLandArea}&buildingArea=${
+              properties.buildingArea || randomBuildingArea
+            }&status=${encodeURIComponent(status)}&vacant=${
+              isVacant ? "Ya" : "Tidak"
+            }&condition=${
+              isGoodCondition ? "bagus" : "renovasi"
+            }&shmId=${encodeURIComponent(
+              properties.shmId || shmId
+            )}&occupantId=${encodeURIComponent(
+              !isVacant ? properties.occupantId || occupantId : ""
+            )}`
+          );
         }
 
         // Variable to track the currently selected house layer
@@ -512,6 +546,22 @@
             },
           }).addTo(map);
         });
+      }
+
+      // Initialize map when document is ready
+      $(document).ready(function () {
+        initializeMap();
+      });
+
+      // Re-initialize map when page is shown (including when navigating back)
+      window.addEventListener("pageshow", function (event) {
+        // If the page is being restored from cache (user navigating back)
+        if (event.persisted) {
+          // Small delay to ensure DOM is fully ready
+          setTimeout(function () {
+            initializeMap();
+          }, 100);
+        }
       });
     </script>
   </body>
