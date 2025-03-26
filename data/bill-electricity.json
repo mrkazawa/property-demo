@@ -1,0 +1,170 @@
+{
+  "customer": {
+    "id": "5142873906",
+    "name": "Budi Santoso",
+    "address": "Freja Attic Blok A2-15, Northwest Central",
+    "meter_id": "52148709",
+    "tariff_category": "R1/900VA"
+  },
+  "bill": {
+    "invoice_number": "220125789634",
+    "period": "Januari 2025",
+    "billing_date": "28 Januari 2025",
+    "due_date": "20 Februari 2025",
+    "previous_reading": 45721,
+    "current_reading": 46172,
+    "usage_kwh": 451,
+    "status": "Belum Lunas"
+  },
+  "calculation": {
+    "base_charge": 35000,
+    "usage_blocks": [
+      {
+        "block": "0-30 kWh",
+        "rate": 169,
+        "kwh": 30,
+        "amount": 5070
+      },
+      {
+        "block": "31-60 kWh",
+        "rate": 274.5,
+        "kwh": 30,
+        "amount": 8235
+      },
+      {
+        "block": "> 60 kWh",
+        "rate": 420.7,
+        "kwh": 391,
+        "amount": 164493.7
+      }
+    ],
+    "ppj_tax": 25000,
+    "admin_fee": 3500,
+    "vat": 19779.87,
+    "total": 256078.57,
+    "rounded_total": 256100
+  },
+  "usage_history": [
+    { "month": "Februari 2024", "usage": 462, "amount": 263450 },
+    { "month": "Maret 2024", "usage": 478, "amount": 268780 },
+    { "month": "April 2024", "usage": 504, "amount": 280100 },
+    { "month": "Mei 2024", "usage": 527, "amount": 289350 },
+    { "month": "Juni 2024", "usage": 532, "amount": 291400 },
+    { "month": "Juli 2024", "usage": 543, "amount": 295800 },
+    { "month": "Agustus 2024", "usage": 538, "amount": 293700 },
+    { "month": "September 2024", "usage": 509, "amount": 282000 },
+    { "month": "Oktober 2024", "usage": 482, "amount": 270350 },
+    { "month": "November 2024", "usage": 468, "amount": 265900 },
+    { "month": "Desember 2024", "usage": 459, "amount": 262000 },
+    { "month": "Januari 2025", "usage": 451, "amount": 256100 }
+  ],
+  "usage_comparison": {
+    "your_usage": 451,
+    "same_house_type_avg": 468,
+    "neighborhood_avg": 482,
+    "same_tariff_category_avg": 475
+  },
+  "efficiency_tips": [
+    "Gunakan lampu LED untuk menghemat listrik hingga 80% dibanding lampu pijar",
+    "Bersihkan filter AC secara rutin untuk meningkatkan efisiensi",
+    "Cabut perangkat elektronik yang tidak digunakan dari stopkontak",
+    "Manfaatkan cahaya alami di siang hari"
+  ],
+  "payment_methods": {
+    "online_banking": [
+      {
+        "bank": "Bank BCA",
+        "virtual_account": "8241 0000 5142 8739",
+        "steps": [
+          "Login ke BCA Mobile atau Internet Banking",
+          "Pilih menu Transfer > Virtual Account",
+          "Masukkan nomor Virtual Account",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      },
+      {
+        "bank": "Bank Mandiri",
+        "virtual_account": "8973 0000 5142 8739",
+        "steps": [
+          "Login ke Livin by Mandiri atau Internet Banking",
+          "Pilih menu Pembayaran > Lainnya > Virtual Account",
+          "Masukkan nomor Virtual Account",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      },
+      {
+        "bank": "Bank BNI",
+        "virtual_account": "8241 0000 5142 8739",
+        "steps": [
+          "Login ke BNI Mobile Banking atau Internet Banking",
+          "Pilih menu Transfer > Virtual Account",
+          "Masukkan nomor Virtual Account",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      },
+      {
+        "bank": "Bank BRI",
+        "virtual_account": "8677 0000 5142 8739",
+        "steps": [
+          "Login ke BRImo atau Internet Banking",
+          "Pilih menu Pembayaran > BRIVA",
+          "Masukkan nomor Virtual Account",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      }
+    ],
+    "e_wallet": [
+      {
+        "name": "GoPay",
+        "steps": [
+          "Buka aplikasi Gojek",
+          "Pilih menu Bayar",
+          "Pilih Tagihan Listrik",
+          "Masukkan ID Pelanggan 5142873906",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      },
+      {
+        "name": "OVO",
+        "steps": [
+          "Buka aplikasi OVO",
+          "Pilih menu Bayar Tagihan",
+          "Pilih Tagihan Listrik",
+          "Masukkan ID Pelanggan 5142873906",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      },
+      {
+        "name": "DANA",
+        "steps": [
+          "Buka aplikasi DANA",
+          "Pilih menu Tagihan",
+          "Pilih Tagihan Listrik",
+          "Masukkan ID Pelanggan 5142873906",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      }
+    ],
+    "convenience_stores": [
+      {
+        "store": "Indomaret",
+        "steps": [
+          "Kunjungi gerai Indomaret terdekat",
+          "Informasikan kepada kasir untuk pembayaran tagihan listrik PLN",
+          "Berikan ID Pelanggan 5142873906",
+          "Bayar sesuai jumlah tagihan plus biaya admin"
+        ]
+      },
+      {
+        "store": "Alfamart",
+        "steps": [
+          "Kunjungi gerai Alfamart terdekat",
+          "Informasikan kepada kasir untuk pembayaran tagihan listrik PLN",
+          "Berikan ID Pelanggan 5142873906",
+          "Bayar sesuai jumlah tagihan plus biaya admin"
+        ]
+      }
+    ]
+  },
+  "important_info": "Tagihan yang melebihi tanggal jatuh tempo akan dikenakan denda sebesar 3% atau minimal Rp 5.000 dan berisiko pemutusan sementara."
+}

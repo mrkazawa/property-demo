@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Property Bills - Northwest Central</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+
+    <style>
+      .container {
+        margin-top: 30px;
+        margin-bottom: 30px;
+      }
+      .back-link {
+        margin-bottom: 20px;
+      }
+      .bill-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #495057;
+      }
+      .bill-status {
+        font-weight: 600;
+      }
+      .status-paid {
+        color: #198754;
+      }
+      .status-unpaid {
+        color: #dc3545;
+      }
+      .deadline-soon {
+        color: #fd7e14;
+        font-weight: 600;
+      }
+      .card-title {
+        font-weight: 600;
+      }
+      .amount {
+        font-weight: 600;
+        font-family: monospace;
+        font-size: 1.1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="back-link d-flex justify-content-between align-items-center">
+        <a href="house.html" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-arrow-left"></i> Kembali ke Detail Properti
+        </a>
+      </div>
+
+      <h2 class="mb-4">Tagihan Properti</h2>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Daftar Tagihan</h5>
+
+          <div class="table-responsive">
+            <table class="table table-hover bill-table">
+              <thead>
+                <tr>
+                  <th>Jenis Tagihan</th>
+                  <th>Periode</th>
+                  <th>Jumlah</th>
+                  <th>Jatuh Tempo</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Electricity Bill -->
+                <tr>
+                  <td>
+                    <i class="bi bi-lightning-charge text-warning me-2"></i>
+                    Listrik
+                  </td>
+                  <td>Januari 2025</td>
+                  <td class="amount">Rp 450.500</td>
+                  <td>28 Januari 2025</td>
+                  <td>
+                    <span class="bill-status status-paid">
+                      <i class="bi bi-check-circle-fill me-1"></i>Lunas
+                    </span>
+                  </td>
+                  <td>
+                    <a
+                      href="bill-electricity.html"
+                      class="btn btn-sm btn-outline-primary"
+                    >
+                      <i class="bi bi-file-earmark-text"></i> Detail
+                    </a>
+                  </td>
+                </tr>
+
+                <!-- Water Bill -->
+                <tr>
+                  <td>
+                    <i class="bi bi-droplet-fill text-info me-2"></i>
+                    Air
+                  </td>
+                  <td>Februari 2025</td>
+                  <td class="amount">Rp 215.750</td>
+                  <td class="deadline-soon">15 Februari 2025</td>
+                  <td>
+                    <span class="bill-status status-unpaid">
+                      <i class="bi bi-exclamation-circle-fill me-1"></i>Belum
+                      Lunas
+                    </span>
+                  </td>
+                  <td>
+                    <a
+                      href="bill-water.html"
+                      class="btn btn-sm btn-outline-primary"
+                    >
+                      <i class="bi bi-file-earmark-text"></i> Detail
+                    </a>
+                  </td>
+                </tr>
+
+                <!-- Environment Bill -->
+                <tr>
+                  <td>
+                    <i class="bi bi-tree-fill text-success me-2"></i>
+                    Lingkungan
+                  </td>
+                  <td>Maret 2025</td>
+                  <td class="amount">Rp 300.000</td>
+                  <td>31 Maret 2025</td>
+                  <td>
+                    <span class="bill-status status-unpaid">
+                      <i class="bi bi-exclamation-circle-fill me-1"></i>Belum
+                      Lunas
+                    </span>
+                  </td>
+                  <td>
+                    <a
+                      href="bill-environment.html"
+                      class="btn btn-sm btn-outline-primary"
+                    >
+                      <i class="bi bi-file-earmark-text"></i> Detail
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Card -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Ringkasan Tagihan</h5>
+
+          <div class="row mt-3">
+            <div class="col-md-4 mb-3">
+              <div class="card bg-light">
+                <div class="card-body text-center">
+                  <h6 class="text-primary mb-3">Total Tagihan</h6>
+                  <h4>Rp 515.750</h4>
+                  <small class="text-muted">Belum termasuk tagihan lunas</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <div class="card bg-light">
+                <div class="card-body text-center">
+                  <h6 class="text-success mb-3">Sudah Dibayar</h6>
+                  <h4>Rp 450.500</h4>
+                  <small class="text-muted">1 tagihan</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <div class="card bg-light">
+                <div class="card-body text-center">
+                  <h6 class="text-danger mb-3">Belum Dibayar</h6>
+                  <h4>Rp 515.750</h4>
+                  <small class="text-muted">2 tagihan</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-3">
+            <button class="btn btn-primary">
+              <i class="bi bi-credit-card"></i> Bayar Semua Tagihan
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        // Check URL parameters to potentially highlight a specific bill type
+        const urlParams = new URLSearchParams(window.location.search);
+        const highlightType = urlParams.get("highlight");
+
+        if (highlightType) {
+          // Scroll to and highlight the specific bill row
+          const selector = `tr:contains('${highlightType}')`;
+          $(selector).addClass("table-info");
+
+          // Scroll to the highlighted row
+          setTimeout(function () {
+            $(selector)[0].scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }, 300);
+        }
+      });
+    </script>
+  </body>
+</html>

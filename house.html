@@ -101,6 +101,56 @@
         justify-content: space-between;
         align-items: center;
       }
+      /* Bills section styling */
+      .bills-container {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+      .bills-card {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .bills-header {
+        background-color: #0d6efd;
+        color: white;
+        border-radius: 8px 8px 0 0;
+        padding: 15px;
+      }
+      .bills-body {
+        padding: 20px;
+      }
+      .bills-amount {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #0d6efd;
+      }
+      .bills-status {
+        font-size: 0.9rem;
+        display: block;
+        margin-top: 5px;
+      }
+      .bills-due {
+        color: #dc3545;
+        font-weight: 500;
+      }
+      .bills-button {
+        width: 100%;
+        margin-top: 15px;
+      }
+      .bills-icon {
+        margin-right: 8px;
+      }
+      /* Timeline button styling in specs header */
+      .specs-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
     </style>
   </head>
   <body>
@@ -108,10 +158,6 @@
       <div class="back-link d-flex justify-content-between align-items-center">
         <a href="index.html" class="btn btn-outline-secondary btn-sm">
           <i class="bi bi-arrow-left"></i> Kembali ke Peta
-        </a>
-        
-        <a href="timeline.html" id="timeline-btn" class="btn btn-warning btn-sm">
-          <i class="bi bi-clock-history"></i> Lihat Timeline Renovasi
         </a>
       </div>
 
@@ -192,10 +238,63 @@
 
       <!-- Bottom Row - Specifications and Condition -->
       <div class="row mt-4">
+        <!-- Bills Section -->
+        <div class="col-md-4">
+          <div class="bills-container">
+            <div class="bills-card">
+              <div class="bills-header">
+                <h4 class="mb-0">
+                  <i class="bi bi-receipt bills-icon"></i>Tagihan
+                </h4>
+              </div>
+              <div class="bills-body">
+                <div class="text-center">
+                  <span class="bills-amount">Rp 1.250.000</span>
+                  <span class="bills-status">
+                    <span class="bills-due"
+                      ><i class="bi bi-exclamation-circle-fill"></i> Jatuh tempo
+                      dalam 5 hari</span
+                    >
+                  </span>
+                  <p class="mt-3 mb-0 text-muted">
+                    3 tagihan yang perlu dibayar:
+                  </p>
+                  <ul class="list-unstyled text-start mt-2">
+                    <li>
+                      <i class="bi bi-lightning-fill text-warning"></i> Listrik:
+                      Rp 520.000
+                    </li>
+                    <li>
+                      <i class="bi bi-droplet-fill text-primary"></i> Air: Rp
+                      180.000
+                    </li>
+                    <li>
+                      <i class="bi bi-house-fill text-success"></i> IPL: Rp
+                      550.000
+                    </li>
+                  </ul>
+                  <a href="bills.html" class="btn btn-primary bills-button">
+                    <i class="bi bi-credit-card"></i> Lihat Detail Tagihan
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Specifications -->
-        <div class="col-md-12">
+        <div class="col-md-8">
           <div class="specs-container">
-            <h4 class="mb-3">Spesifikasi Rumah</h4>
+            <div class="specs-header">
+              <h4 class="mb-0">Spesifikasi Rumah</h4>
+              <a
+                href="timeline.html"
+                id="timeline-btn"
+                class="btn btn-warning btn-sm"
+              >
+                <i class="bi bi-clock-history"></i> Lihat Timeline Renovasi
+              </a>
+            </div>
             <div id="specs-content">
               <div class="text-center mb-3" id="loading-spinner">
                 <div class="spinner-border text-primary" role="status">
@@ -238,12 +337,19 @@
         const buildingArea = urlParams.get("buildingArea") || "110";
         const status = urlParams.get("status") || "Disewakan";
         const vacant = urlParams.get("vacant") || "Tidak";
-        const shmId = urlParams.get("shmId") || "0x8f731e31c44df5043a82ad2e3b4295c5bfda8d4e";
-        const occupantId = urlParams.get("occupantId") || "0x3a95b394e0f5e1db59591e12a4d9d3f4fc8e799d";
+        const shmId =
+          urlParams.get("shmId") ||
+          "0x8f731e31c44df5043a82ad2e3b4295c5bfda8d4e";
+        const occupantId =
+          urlParams.get("occupantId") ||
+          "0x3a95b394e0f5e1db59591e12a4d9d3f4fc8e799d";
 
         // IMPORTANT: Set the timeline button link FIRST, before anything else
-        $("#timeline-btn").attr("href", `timeline.html?id=${houseId}&type=${encodeURIComponent(houseType)}`);
-        
+        $("#timeline-btn").attr(
+          "href",
+          `timeline.html?id=${houseId}&type=${encodeURIComponent(houseType)}`
+        );
+
         // Set page title
         document.title = `${houseType} - Northwest Central`;
 
@@ -252,27 +358,27 @@
         $("#house-owner").text(owner);
         $("#land-area").text(landArea);
         $("#building-area").text(buildingArea);
-        
+
         // Set status with appropriate badge class
         let badgeClass = "bg-info text-dark";
         if (status === "Dijual") badgeClass = "bg-warning text-dark";
         else if (status === "Off-market property") badgeClass = "bg-secondary";
-        
+
         $("#house-status-container").html(`
           <span class="badge ${badgeClass} status-badge">${status}</span>
         `);
-        
+
         // Set vacant status
         const vacantClass = vacant === "Ya" ? "text-danger" : "text-success";
         $("#house-vacant").html(`
           <span class="vacant-status ${vacantClass}">${vacant}</span>
         `);
-        
+
         // Hide occupant row if vacant
         if (vacant === "Ya") {
           $("#occupant-row").hide();
         }
-        
+
         // Set SHM ID and Occupant ID
         $("#shm-id").text(shmId);
         $("#occupant-id").text(occupantId);
@@ -292,7 +398,7 @@
         const conditionOptions = [
           { status: "Bagus", class: "spec-condition-good" },
           { status: "Perlu Renovasi", class: "spec-condition-bad" },
-          { status: "Sedang Renovasi", class: "spec-condition-progress" }
+          { status: "Sedang Renovasi", class: "spec-condition-progress" },
         ];
 
         // Function to generate random condition status with weighted distribution
@@ -311,83 +417,87 @@
         $.ajax({
           url: "house-specification.json",
           dataType: "json",
-          success: function(data) {
+          success: function (data) {
             console.log("JSON data loaded:", data);
 
             if (data && data.house_specification) {
               const spec = data.house_specification;
               const tableBody = $("#specs-table-body");
-              
+
               // Clear existing content
               tableBody.empty();
-              
+
               // Create a tracker for conditions to ensure each type appears at least once
               let conditionTracker = {
-                "Bagus": 0,
+                Bagus: 0,
                 "Perlu Renovasi": 0,
-                "Sedang Renovasi": 0
+                "Sedang Renovasi": 0,
               };
-              
+
               // Skip basic specifications (bedrooms, bathrooms, carport)
-              
+
               // Add detailed specifications
               if (spec.details) {
                 const details = spec.details;
                 let entries = Object.entries(details);
                 let totalEntries = entries.length;
-                
+
                 // First pass - randomly assign conditions but track what's used
                 const conditions = [];
-                
+
                 // Process and prepare the data
                 entries.forEach(([key, value]) => {
-                  if (typeof value === 'string') {
+                  if (typeof value === "string") {
                     // Add a random condition
                     conditions.push(getRandomCondition());
-                  } else if (typeof value === 'object' && key === 'lantai') {
+                  } else if (typeof value === "object" && key === "lantai") {
                     // Handle the nested lantai object (counts as 2 entries)
                     conditions.push(getRandomCondition());
                     conditions.push(getRandomCondition());
                   }
                 });
-                
+
                 // Check if we have at least one of each condition type
                 // If not, make sure we add them by replacing some conditions
-                conditionOptions.forEach(option => {
-                  if (!conditions.some(c => c.status === option.status)) {
+                conditionOptions.forEach((option) => {
+                  if (!conditions.some((c) => c.status === option.status)) {
                     // Replace a random condition with this one to ensure it appears
-                    const randomIndex = Math.floor(Math.random() * conditions.length);
+                    const randomIndex = Math.floor(
+                      Math.random() * conditions.length
+                    );
                     conditions[randomIndex] = option;
                   }
                 });
-                
+
                 // Second pass - actually render the specs with the prepared conditions
                 let condIndex = 0;
-                
+
                 // Add each simple property
                 entries.forEach(([key, value]) => {
-                  if (typeof value === 'string') {
+                  if (typeof value === "string") {
                     // Get the assigned condition
                     const conditionInfo = conditions[condIndex++];
                     conditionTracker[conditionInfo.status]++;
-                    
+
                     tableBody.append(`
                       <tr>
                         <th scope="row">${formatLabel(key)}</th>
                         <td>
                           <span class="detail-value">${value}</span>
-                          <span class="spec-condition-badge ${conditionInfo.class}">${conditionInfo.status}</span>
+                          <span class="spec-condition-badge ${
+                            conditionInfo.class
+                          }">${conditionInfo.status}</span>
                         </td>
                       </tr>
                     `);
-                  } else if (typeof value === 'object' && key === 'lantai') {
+                  } else if (typeof value === "object" && key === "lantai") {
                     // Handle the nested lantai object
                     const conditionMain = conditions[condIndex++];
                     const conditionBathroom = conditions[condIndex++];
-                    
+
                     conditionTracker[conditionMain.status]++;
                     conditionTracker[conditionBathroom.status]++;
-                    
+
                     tableBody.append(`
                       <tr>
                         <th scope="row">Lantai Ruang Utama</th>
@@ -406,30 +516,34 @@
                     `);
                   }
                 });
-                
+
                 console.log("Condition distribution:", conditionTracker);
-                
+
                 // After specs are loaded, check if we have any "Sedang Renovasi" items
                 // and update the timeline button accordingly
                 if (conditionTracker["Sedang Renovasi"] > 0) {
                   // Find the first component that's being renovated
-                  const renovatingComponent = $(".spec-condition-badge:contains('Sedang Renovasi')")
+                  const renovatingComponent = $(
+                    ".spec-condition-badge:contains('Sedang Renovasi')"
+                  )
                     .first()
-                    .closest('tr')
-                    .find('th')
+                    .closest("tr")
+                    .find("th")
                     .text();
-                    
+
                   // Update timeline link with component info
-                  $("#timeline-btn").attr("href", 
-                    `timeline.html?id=${houseId}&type=${encodeURIComponent(houseType)}&component=${encodeURIComponent(renovatingComponent)}`
+                  $("#timeline-btn").attr(
+                    "href",
+                    `timeline.html?id=${houseId}&type=${encodeURIComponent(
+                      houseType
+                    )}&component=${encodeURIComponent(renovatingComponent)}`
                   );
                 }
               }
-              
+
               // Hide spinner and show table
               $("#loading-spinner").hide();
               $("#specs-table").removeClass("d-none");
-              
             } else {
               // Display message if no specifications found
               $("#specs-content").html(
@@ -437,42 +551,51 @@
               );
             }
           },
-          error: function(jqXHR, textStatus, errorThrown) {
+          error: function (jqXHR, textStatus, errorThrown) {
             console.error("Error loading JSON:", textStatus, errorThrown);
             console.log("Response:", jqXHR.responseText);
-            
+
             // Handle JSON loading error
             $("#specs-content").html(
-              '<div class="alert alert-danger">Gagal memuat data spesifikasi. Error: ' + textStatus + '</div>'
+              '<div class="alert alert-danger">Gagal memuat data spesifikasi. Error: ' +
+                textStatus +
+                "</div>"
             );
-          }
+          },
         });
-        
+
         // Function to format label from snake_case to Title Case
         function formatLabel(key) {
           // Replace underscores with spaces and capitalize each word
-          return key.split('_')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
+          return key
+            .split("_")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
         }
 
         // IMPORTANT: Update ONLY the back button, not all links in the back-link div
-        $(".back-link a:first").attr("href", `index.html?selectedHouseId=${houseId}`);
-        
+        $(".back-link a:first").attr(
+          "href",
+          `index.html?selectedHouseId=${houseId}`
+        );
+
         // Add direct click handler for timeline button to ensure it works
-        $("#timeline-btn").on("click", function(e) {
+        $("#timeline-btn").on("click", function (e) {
           e.preventDefault(); // Prevent default action
           e.stopPropagation(); // Prevent event bubbling
-          
+
           // Get the current href attribute (which should be correct by now)
           const timelineUrl = $(this).attr("href");
           console.log("Navigating to timeline:", timelineUrl);
-          
+
           // Navigate directly
           window.location.href = timelineUrl;
-          
+
           return false; // Extra safety to prevent default behavior
         });
+
+        // Update the bills button to include the house ID
+        $(".bills-button").attr("href", `bills.html?id=${houseId}`);
       });
     </script>
   </body>

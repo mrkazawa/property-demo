@@ -1,0 +1,178 @@
+{
+  "customer": {
+    "id": "31052678",
+    "name": "Budi Santoso",
+    "address": "Freja Attic Blok A2-15, Northwest Central",
+    "meter_id": "WM-45872391"
+  },
+  "bill": {
+    "invoice_number": "PDAM-2501-0587342",
+    "period": "Februari 2025",
+    "billing_date": "05 Februari 2025",
+    "due_date": "15 Februari 2025",
+    "previous_reading": 3752,
+    "current_reading": 3781,
+    "usage_m3": 29,
+    "status": "Belum Lunas"
+  },
+  "calculation": {
+    "base_charge": 15000,
+    "usage_blocks": [
+      {
+        "block": "0-10 m³",
+        "rate": 2500,
+        "volume": 10,
+        "amount": 25000
+      },
+      {
+        "block": "11-20 m³",
+        "rate": 3250,
+        "volume": 10,
+        "amount": 32500
+      },
+      {
+        "block": "> 20 m³",
+        "rate": 5100,
+        "volume": 9,
+        "amount": 45900
+      }
+    ],
+    "maintenance_fee": 7500,
+    "admin_fee": 2500,
+    "vat": 11340,
+    "total": 139740,
+    "rounded_total": 139700
+  },
+  "usage_history": [
+    { "month": "Maret 2024", "usage": 28, "amount": 135400 },
+    { "month": "April 2024", "usage": 30, "amount": 146300 },
+    { "month": "Mei 2024", "usage": 32, "amount": 158200 },
+    { "month": "Juni 2024", "usage": 34, "amount": 168900 },
+    { "month": "Juli 2024", "usage": 33, "amount": 163800 },
+    { "month": "Agustus 2024", "usage": 30, "amount": 146300 },
+    { "month": "September 2024", "usage": 29, "amount": 139700 },
+    { "month": "Oktober 2024", "usage": 27, "amount": 129200 },
+    { "month": "November 2024", "usage": 28, "amount": 135400 },
+    { "month": "Desember 2024", "usage": 30, "amount": 146300 },
+    { "month": "Januari 2025", "usage": 28, "amount": 135400 },
+    { "month": "Februari 2025", "usage": 29, "amount": 139700 }
+  ],
+  "usage_comparison": {
+    "your_usage": 29,
+    "same_house_type_avg": 31,
+    "neighborhood_avg": 33
+  },
+  "water_quality_info": {
+    "ph_level": "7.2 (Normal)",
+    "clarity": "Jernih",
+    "chlorine": "0.5 mg/L (Memenuhi standar)",
+    "last_tested": "28 Januari 2025"
+  },
+  "conservation_tips": [
+    "Perbaiki segera keran yang bocor, dapat menghemat hingga 15 liter per hari",
+    "Gunakan shower timer untuk membatasi durasi mandi",
+    "Pasang aerator pada keran untuk mengurangi aliran air",
+    "Tampung air hujan untuk menyiram tanaman"
+  ],
+  "payment_methods": {
+    "online_banking": [
+      {
+        "bank": "Bank BCA",
+        "virtual_account": "9245 0000 3105 2678",
+        "steps": [
+          "Login ke BCA Mobile atau Internet Banking",
+          "Pilih menu Transfer > Virtual Account",
+          "Masukkan nomor Virtual Account",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      },
+      {
+        "bank": "Bank Mandiri",
+        "virtual_account": "9871 0000 3105 2678",
+        "steps": [
+          "Login ke Livin by Mandiri atau Internet Banking",
+          "Pilih menu Pembayaran > Lainnya > Virtual Account",
+          "Masukkan nomor Virtual Account",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      },
+      {
+        "bank": "Bank BNI",
+        "virtual_account": "9246 0000 3105 2678",
+        "steps": [
+          "Login ke BNI Mobile Banking atau Internet Banking",
+          "Pilih menu Transfer > Virtual Account",
+          "Masukkan nomor Virtual Account",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      },
+      {
+        "bank": "Bank BRI",
+        "virtual_account": "9678 0000 3105 2678",
+        "steps": [
+          "Login ke BRImo atau Internet Banking",
+          "Pilih menu Pembayaran > BRIVA",
+          "Masukkan nomor Virtual Account",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      }
+    ],
+    "e_wallet": [
+      {
+        "name": "GoPay",
+        "steps": [
+          "Buka aplikasi Gojek",
+          "Pilih menu Bayar",
+          "Pilih Tagihan PDAM",
+          "Masukkan ID Pelanggan 31052678",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      },
+      {
+        "name": "OVO",
+        "steps": [
+          "Buka aplikasi OVO",
+          "Pilih menu Bayar Tagihan",
+          "Pilih Tagihan PDAM",
+          "Masukkan ID Pelanggan 31052678",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      },
+      {
+        "name": "DANA",
+        "steps": [
+          "Buka aplikasi DANA",
+          "Pilih menu Tagihan",
+          "Pilih Tagihan PDAM",
+          "Masukkan ID Pelanggan 31052678",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      }
+    ],
+    "convenience_stores": [
+      {
+        "store": "Indomaret",
+        "steps": [
+          "Kunjungi gerai Indomaret terdekat",
+          "Informasikan kepada kasir untuk pembayaran tagihan PDAM",
+          "Berikan ID Pelanggan 31052678",
+          "Bayar sesuai jumlah tagihan plus biaya admin"
+        ]
+      },
+      {
+        "store": "Alfamart",
+        "steps": [
+          "Kunjungi gerai Alfamart terdekat",
+          "Informasikan kepada kasir untuk pembayaran tagihan PDAM",
+          "Berikan ID Pelanggan 31052678",
+          "Bayar sesuai jumlah tagihan plus biaya admin"
+        ]
+      }
+    ],
+    "pdam_office": {
+      "address": "Jl. Raya Darmo No. 55, Surabaya",
+      "open_hours": "Senin-Jumat: 08.00-16.00, Sabtu: 08.00-12.00"
+    }
+  },
+  "important_info": "Tagihan yang melebihi tanggal jatuh tempo akan dikenakan denda sebesar 5% dan berisiko pemutusan sementara. Untuk pengaduan kebocoran atau masalah air, hubungi call center PDAM di 1500972."
+}

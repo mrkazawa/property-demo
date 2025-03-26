@@ -1,0 +1,172 @@
+{
+  "customer": {
+    "id": "NWC-A2-15",
+    "name": "Budi Santoso",
+    "address": "Freja Attic Blok A2-15, Northwest Central",
+    "house_type": "Freja Attic"
+  },
+  "bill": {
+    "invoice_number": "IPL-2503-A215",
+    "period": "Maret 2025",
+    "billing_date": "01 Maret 2025",
+    "due_date": "15 Maret 2025",
+    "status": "Belum Lunas"
+  },
+  "charges": {
+    "items": [
+      {
+        "description": "Keamanan (Satpam 24 jam)",
+        "amount": 150000,
+        "notes": "4 pos keamanan, 12 personel"
+      },
+      {
+        "description": "Kebersihan (Sampah & Taman)",
+        "amount": 75000,
+        "notes": "Pengambilan sampah setiap hari, perawatan taman 2x seminggu"
+      },
+      {
+        "description": "Penerangan Umum",
+        "amount": 25000,
+        "notes": "Lampu jalan dan area publik"
+      },
+      {
+        "description": "Perawatan Fasilitas Umum",
+        "amount": 30000,
+        "notes": "Jalan, drainase, taman bermain"
+      },
+      {
+        "description": "Iuran Dana Cadangan",
+        "amount": 20000,
+        "notes": "Untuk perbaikan darurat dan renovasi berkala"
+      }
+    ],
+    "admin_fee": 5000,
+    "total": 305000
+  },
+  "payment_history": [
+    {
+      "period": "Februari 2025",
+      "amount": 305000,
+      "status": "Lunas",
+      "payment_date": "10 Februari 2025"
+    },
+    {
+      "period": "Januari 2025",
+      "amount": 305000,
+      "status": "Lunas",
+      "payment_date": "12 Januari 2025"
+    },
+    {
+      "period": "Desember 2024",
+      "amount": 305000,
+      "status": "Lunas",
+      "payment_date": "08 Desember 2024"
+    },
+    {
+      "period": "November 2024",
+      "amount": 305000,
+      "status": "Lunas",
+      "payment_date": "10 November 2024"
+    },
+    {
+      "period": "Oktober 2024",
+      "amount": 305000,
+      "status": "Lunas",
+      "payment_date": "09 Oktober 2024"
+    },
+    {
+      "period": "September 2024",
+      "amount": 305000,
+      "status": "Lunas",
+      "payment_date": "07 September 2024"
+    }
+  ],
+  "community_announcements": [
+    {
+      "title": "Perbaikan Jalan Utama",
+      "date": "15 Maret 2025",
+      "description": "Akan dilakukan pengaspalan ulang jalan utama kompleks. Mohon tidak memarkirkan kendaraan di badan jalan pada tanggal tersebut."
+    },
+    {
+      "title": "Pemeriksaan Hydrant",
+      "date": "20 Maret 2025",
+      "description": "Pemeriksaan rutin sistem hydrant akan dilakukan di seluruh area perumahan."
+    }
+  ],
+  "facilities_schedule": {
+    "clubhouse": "07.00 - 22.00 setiap hari",
+    "swimming_pool": "08.00 - 20.00 setiap hari",
+    "gym": "06.00 - 21.00 setiap hari",
+    "tennis_court": "06.00 - 21.00 (reservasi via aplikasi)",
+    "mosque": "Buka 24 jam"
+  },
+  "payment_methods": {
+    "online_banking": [
+      {
+        "bank": "Bank BCA",
+        "account_number": "4392857102",
+        "account_name": "PT Northwest Central Residence",
+        "virtual_account": "7245 0000 215",
+        "steps": [
+          "Login ke BCA Mobile atau Internet Banking",
+          "Pilih menu Transfer > Virtual Account",
+          "Masukkan nomor Virtual Account",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      },
+      {
+        "bank": "Bank Mandiri",
+        "account_number": "1430014382759",
+        "account_name": "PT Northwest Central Residence",
+        "virtual_account": "7871 0000 215",
+        "steps": [
+          "Login ke Livin by Mandiri atau Internet Banking",
+          "Pilih menu Pembayaran > Lainnya > Virtual Account",
+          "Masukkan nomor Virtual Account",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      },
+      {
+        "bank": "Bank BNI",
+        "account_number": "0248391756",
+        "account_name": "PT Northwest Central Residence",
+        "virtual_account": "7246 0000 215",
+        "steps": [
+          "Login ke BNI Mobile Banking atau Internet Banking",
+          "Pilih menu Transfer > Virtual Account",
+          "Masukkan nomor Virtual Account",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      },
+      {
+        "bank": "Bank BRI",
+        "account_number": "0356274819",
+        "account_name": "PT Northwest Central Residence",
+        "virtual_account": "7678 0000 215",
+        "steps": [
+          "Login ke BRImo atau Internet Banking",
+          "Pilih menu Pembayaran > BRIVA",
+          "Masukkan nomor Virtual Account",
+          "Ikuti petunjuk untuk menyelesaikan pembayaran"
+        ]
+      }
+    ],
+    "estate_management_office": {
+      "location": "Clubhouse Northwest Central Lt. 1",
+      "operating_hours": "Senin-Jumat: 08.00-17.00, Sabtu: 08.00-13.00",
+      "payment_methods": ["Tunai", "Kartu Debit", "Kartu Kredit"],
+      "contact": "0812-3456-7890 (Estate Manager)"
+    },
+    "auto_debit": {
+      "availability": "Tersedia untuk semua nasabah BCA, Mandiri, BNI, dan BRI",
+      "registration": "Silakan datang ke kantor Estate Management dengan membawa buku tabungan dan KTP untuk registrasi auto debit"
+    }
+  },
+  "important_info": "Keterlambatan pembayaran IPL akan dikenakan denda sebesar 1% per minggu. Tunggakan lebih dari 3 bulan dapat mengakibatkan penonaktifan kartu akses dan pembatasan fasilitas kompleks perumahan.",
+  "contact_info": {
+    "emergency": "0812-9876-5432 (24 jam)",
+    "customer_service": "0812-3456-7890 (08.00-17.00, Senin-Sabtu)",
+    "email": "cs@northwestcentral.id",
+    "website": "www.northwestcentral.id"
+  }
+}

@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Tagihan Lingkungan - Northwest Central</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      body {
+        background-color: #f5f7fa;
+      }
+      .container {
+        margin-top: 30px;
+        margin-bottom: 30px;
+      }
+      .back-link {
+        margin-bottom: 20px;
+      }
+      .bill-card {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+      }
+      .bill-header {
+        background-color: #198754;
+        color: white;
+        border-radius: 10px 10px 0 0;
+        padding: 15px 20px;
+        position: relative;
+        overflow: hidden;
+      }
+      .bill-header h4 {
+        margin: 0;
+        position: relative;
+        z-index: 2;
+      }
+      .bill-header::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(50%, -50%);
+        z-index: 1;
+      }
+      .bill-body {
+        padding: 20px;
+      }
+      .status-badge {
+        font-size: 0.85rem;
+        padding: 0.35em 0.65em;
+      }
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+      .info-item {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+      }
+      .info-item-header {
+        color: #6c757d;
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+      }
+      .info-item-value {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0;
+      }
+      .info-item-subvalue {
+        font-size: 0.85rem;
+        color: #6c757d;
+      }
+      .usage-history-chart {
+        height: 300px;
+      }
+      .va-card {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+      }
+      .va-number {
+        font-family: monospace;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+      .va-steps {
+        margin-top: 10px;
+        padding-left: 25px;
+      }
+      .va-steps li {
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+      }
+      .bill-breakdown {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+      }
+      .bill-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+      }
+      .bill-row.total {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px dashed #dee2e6;
+        font-weight: 700;
+      }
+      .important-info {
+        background-color: rgba(253, 126, 20, 0.1);
+        color: #fd7e14;
+        border-left: 4px solid #fd7e14;
+        padding: 10px 15px;
+        margin-top: 20px;
+      }
+      .charge-item {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+      }
+      .charge-item-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
+      .charge-item-description {
+        font-weight: 600;
+      }
+      .charge-item-amount {
+        font-weight: 600;
+        color: #198754;
+      }
+      .charge-item-notes {
+        font-size: 0.85rem;
+        color: #6c757d;
+      }
+      .announcement-card {
+        background-color: rgba(25, 135, 84, 0.1);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+      }
+      .announcement-title {
+        font-weight: 600;
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .announcement-date {
+        font-size: 0.85rem;
+        color: #6c757d;
+      }
+      .facility-item {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #dee2e6;
+        padding: 10px 0;
+      }
+      .facility-item:last-child {
+        border-bottom: none;
+      }
+      .facility-icon {
+        background-color: rgba(25, 135, 84, 0.1);
+        color: #198754;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin-right: 15px;
+      }
+      .facility-name {
+        width: 140px;
+        font-weight: 600;
+      }
+      .facility-hours {
+        flex: 1;
+      }
+      .payment-history-table {
+        font-size: 0.9rem;
+      }
+      .payment-history-table th,
+      .payment-history-table td {
+        padding: 10px;
+        vertical-align: middle;
+      }
+      .contact-group {
+        margin-bottom: 15px;
+      }
+      .contact-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .contact-icon {
+        width: 30px;
+        text-align: center;
+        margin-right: 10px;
+        color: #198754;
+      }
+      .leaf-bg {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='150' height='150'%3E%3Cpath fill='rgba(255,255,255,0.1)' d='M17.2,17.2c3.2-3.2,4.6-7.5,4.3-11.7c-4.2-0.3-8.5,1.1-11.7,4.3s-4.6,7.5-4.3,11.7C9.7,21.8,14,20.4,17.2,17.2L17.2,17.2z M6.3,15.5c-0.3-1.2-0.3-2.3-0.1-3.5c0.4,1.2,1,2.5,1.9,3.5c0.8,1.1,1.7,2,2.8,2.7C9.2,17.8,7.6,16.9,6.3,15.5L6.3,15.5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right bottom;
+        opacity: 0.8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="back-link">
+        <a href="bills.html" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-arrow-left"></i> Kembali ke Daftar Tagihan
+        </a>
+      </div>
+
+      <div class="bill-card">
+        <div class="bill-header position-relative">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <h4><i class="bi bi-tree-fill me-2"></i>Tagihan Lingkungan</h4>
+            </div>
+            <div class="col-md-6 text-md-end">
+              <span
+                class="badge bg-light text-dark status-badge"
+                id="bill-status"
+                >Menunggu Pembayaran</span
+              >
+              <a href="#payment" class="btn btn-sm btn-light ms-2">
+                <i class="bi bi-credit-card"></i> Bayar Sekarang
+              </a>
+            </div>
+          </div>
+          <div class="leaf-bg"></div>
+        </div>
+
+        <div class="bill-body">
+          <div class="info-grid mb-4">
+            <div class="info-item">
+              <div class="info-item-header">ID Properti</div>
+              <div class="info-item-value" id="customer-id">-</div>
+            </div>
+            <div class="info-item">
+              <div class="info-item-header">Nama</div>
+              <div class="info-item-value" id="customer-name">-</div>
+            </div>
+            <div class="info-item">
+              <div class="info-item-header">Tipe Rumah</div>
+              <div class="info-item-value" id="house-type">-</div>
+            </div>
+            <div class="info-item">
+              <div class="info-item-header">Alamat</div>
+              <div
+                class="info-item-value"
+                id="customer-address"
+                style="font-size: 0.9rem"
+              >
+                -
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="info-item mb-4">
+                <div class="info-item-header">Periode Tagihan</div>
+                <div class="info-item-value" id="billing-period">-</div>
+                <div class="info-item-subvalue" id="billing-date">
+                  Tanggal Penagihan: -
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div
+                class="info-item mb-4"
+                style="background-color: rgba(25, 135, 84, 0.1)"
+              >
+                <div class="info-item-header">Total Tagihan</div>
+                <div
+                  class="info-item-value"
+                  id="bill-amount"
+                  style="font-size: 1.8rem; color: #198754"
+                >
+                  Rp 0
+                </div>
+                <div class="info-item-subvalue" id="due-date">
+                  Jatuh Tempo: -
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h5 class="card-title mb-0">Rincian Tagihan</h5>
+                </div>
+                <div class="card-body">
+                  <div id="charges-container">
+                    <!-- Charges will be loaded here -->
+                  </div>
+
+                  <div class="bill-row total">
+                    <div>Total Tagihan</div>
+                    <div id="total-bill">Rp 0</div>
+                  </div>
+
+                  <div class="important-info" id="important-info">
+                    <!-- Important information will be loaded here -->
+                  </div>
+                </div>
+              </div>
+
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h5 class="card-title mb-0">Pengumuman</h5>
+                </div>
+                <div class="card-body">
+                  <div id="announcements-container">
+                    <!-- Announcements will be loaded here -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h5 class="card-title mb-0">Riwayat Pembayaran</h5>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-hover payment-history-table">
+                      <thead>
+                        <tr>
+                          <th>Periode</th>
+                          <th>Jumlah</th>
+                          <th>Tanggal Bayar</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody id="payment-history-container">
+                        <!-- Payment history will be loaded here -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h5 class="card-title mb-0">Jadwal Fasilitas</h5>
+                </div>
+                <div class="card-body">
+                  <div id="facilities-container">
+                    <!-- Facilities schedule will be loaded here -->
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title mb-0">Kontak</h5>
+                </div>
+                <div class="card-body">
+                  <div class="contact-group" id="contact-info">
+                    <!-- Contact information will be loaded here -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="payment" class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Cara Pembayaran</h5>
+            </div>
+            <div class="card-body">
+              <ul class="nav nav-tabs" id="paymentMethodTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link active"
+                    id="bank-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#bank-content"
+                    type="button"
+                    role="tab"
+                  >
+                    <i class="bi bi-bank"></i> Online Banking
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="office-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#office-content"
+                    type="button"
+                    role="tab"
+                  >
+                    <i class="bi bi-building"></i> Kantor Estate Management
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="auto-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#auto-content"
+                    type="button"
+                    role="tab"
+                  >
+                    <i class="bi bi-calendar-check"></i> Auto Debit
+                  </button>
+                </li>
+              </ul>
+
+              <div class="tab-content pt-3" id="paymentMethodContent">
+                <div
+                  class="tab-pane fade show active"
+                  id="bank-content"
+                  role="tabpanel"
+                >
+                  <div class="row" id="bank-payment-methods"></div>
+                </div>
+
+                <div class="tab-pane fade" id="office-content" role="tabpanel">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="alert alert-info" id="office-payment-info">
+                        <!-- Estate management office details will be loaded here -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="auto-content" role="tabpanel">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="alert alert-success" id="auto-debit-info">
+                        <!-- Auto-debit information will be loaded here -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- jQuery and Bootstrap Bundle with Popper -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        // Load environment bill data from JSON
+        $.getJSON("data/bill-environment.json", function (data) {
+          // Customer information
+          $("#customer-id").text(data.customer.id);
+          $("#customer-name").text(data.customer.name);
+          $("#house-type").text(data.customer.house_type);
+          $("#customer-address").text(data.customer.address);
+
+          // Bill details
+          $("#billing-period").text(data.bill.period);
+          $("#billing-date").text(
+            "Tanggal Penagihan: " + data.bill.billing_date
+          );
+          $("#bill-amount").text("Rp " + formatNumber(data.charges.total));
+          $("#due-date").text("Jatuh Tempo: " + data.bill.due_date);
+
+          // Status badge
+          if (data.bill.status === "Lunas") {
+            $("#bill-status")
+              .removeClass("bg-light text-dark")
+              .addClass("bg-success text-white")
+              .text("Lunas");
+          } else {
+            $("#bill-status").text(data.bill.status);
+          }
+
+          // Charge items
+          let chargesHTML = "";
+          data.charges.items.forEach((item) => {
+            chargesHTML += `
+            <div class="charge-item">
+              <div class="charge-item-header">
+                <div class="charge-item-description">${item.description}</div>
+                <div class="charge-item-amount">Rp ${formatNumber(
+                  item.amount
+                )}</div>
+              </div>
+              <div class="charge-item-notes">${item.notes}</div>
+            </div>
+          `;
+          });
+
+          chargesHTML += `
+          <div class="bill-row">
+            <div>Biaya Admin</div>
+            <div>Rp ${formatNumber(data.charges.admin_fee)}</div>
+          </div>
+        `;
+
+          $("#charges-container").html(chargesHTML);
+          $("#total-bill").text("Rp " + formatNumber(data.charges.total));
+
+          // Important info
+          $("#important-info").html(
+            `<i class="bi bi-exclamation-triangle me-2"></i> ${data.important_info}`
+          );
+
+          // Payment history
+          let paymentHistoryHTML = "";
+          data.payment_history.forEach((payment) => {
+            const statusClass =
+              payment.status === "Lunas" ? "text-success" : "text-danger";
+            paymentHistoryHTML += `
+            <tr>
+              <td>${payment.period}</td>
+              <td>Rp ${formatNumber(payment.amount)}</td>
+              <td>${payment.payment_date || "-"}</td>
+              <td class="${statusClass} fw-bold">${payment.status}</td>
+            </tr>
+          `;
+          });
+          $("#payment-history-container").html(paymentHistoryHTML);
+
+          // Announcements
+          let announcementsHTML = "";
+          if (
+            data.community_announcements &&
+            data.community_announcements.length > 0
+          ) {
+            data.community_announcements.forEach((announcement) => {
+              announcementsHTML += `
+              <div class="announcement-card">
+                <div class="announcement-title">
+                  <span>${announcement.title}</span>
+                  <span class="announcement-date">${announcement.date}</span>
+                </div>
+                <p class="mb-0">${announcement.description}</p>
+              </div>
+            `;
+            });
+          } else {
+            announcementsHTML =
+              '<div class="alert alert-info">Tidak ada pengumuman saat ini.</div>';
+          }
+          $("#announcements-container").html(announcementsHTML);
+
+          // Facilities schedule
+          let facilitiesHTML = "";
+          if (data.facilities_schedule) {
+            const facilityIcons = {
+              clubhouse: "bi-house",
+              swimming_pool: "bi-water",
+              gym: "bi-bicycle",
+              tennis_court: "bi-dribbble",
+              mosque: "bi-building",
+            };
+
+            for (const [facility, hours] of Object.entries(
+              data.facilities_schedule
+            )) {
+              const icon = facilityIcons[facility] || "bi-building";
+              const facilityName = facility
+                .replace("_", " ")
+                .replace(/\b\w/g, (l) => l.toUpperCase());
+
+              facilitiesHTML += `
+              <div class="facility-item">
+                <div class="facility-icon"><i class="bi ${icon}"></i></div>
+                <div class="facility-name">${facilityName}</div>
+                <div class="facility-hours">${hours}</div>
+              </div>
+            `;
+            }
+          }
+          $("#facilities-container").html(facilitiesHTML);
+
+          // Contact information
+          let contactHTML = "";
+          if (data.contact_info) {
+            contactHTML += `
+            <div class="contact-item">
+              <div class="contact-icon"><i class="bi bi-telephone-fill"></i></div>
+              <div>Emergency: ${data.contact_info.emergency}</div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon"><i class="bi bi-headset"></i></div>
+              <div>Customer Service: ${data.contact_info.customer_service}</div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon"><i class="bi bi-envelope-fill"></i></div>
+              <div>Email: ${data.contact_info.email}</div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon"><i class="bi bi-globe"></i></div>
+              <div>Website: ${data.contact_info.website}</div>
+            </div>
+          `;
+          }
+          $("#contact-info").html(contactHTML);
+
+          // Payment methods - Online Banking
+          let bankMethodsHTML = "";
+          data.payment_methods.online_banking.forEach((bank) => {
+            bankMethodsHTML += `
+            <div class="col-md-6 mb-3">
+              <div class="va-card">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="me-3">
+                    <img src="https://via.placeholder.com/40x40.png?text=${bank.bank.substring(
+                      5,
+                      8
+                    )}" alt="${bank.bank}" class="rounded">
+                  </div>
+                  <div>
+                    <h6 class="mb-0">${bank.bank}</h6>
+                    <div>No. Rekening: <span class="va-number">${
+                      bank.account_number
+                    }</span></div>
+                    <div class="small text-muted">Atas nama: ${
+                      bank.account_name
+                    }</div>
+                    <div>VA: <span class="va-number">${
+                      bank.virtual_account
+                    }</span></div>
+                  </div>
+                </div>
+                <ol class="va-steps">
+                  ${bank.steps.map((step) => `<li>${step}</li>`).join("")}
+                </ol>
+              </div>
+            </div>
+          `;
+          });
+          $("#bank-payment-methods").html(bankMethodsHTML);
+
+          // Estate management office information
+          if (data.payment_methods.estate_management_office) {
+            const office = data.payment_methods.estate_management_office;
+            $("#office-payment-info").html(`
+            <div class="d-flex">
+              <div><i class="bi bi-building fs-3 me-3"></i></div>
+              <div>
+                <h6>Kantor Estate Management</h6>
+                <p><strong>Lokasi:</strong> ${office.location}</p>
+                <p><strong>Jam Operasional:</strong> ${
+                  office.operating_hours
+                }</p>
+                <p><strong>Metode Pembayaran:</strong> ${office.payment_methods.join(
+                  ", "
+                )}</p>
+                <p class="mb-0"><strong>Kontak:</strong> ${office.contact}</p>
+              </div>
+            </div>
+          `);
+          }
+
+          // Auto-debit information
+          if (data.payment_methods.auto_debit) {
+            const autoDebit = data.payment_methods.auto_debit;
+            $("#auto-debit-info").html(`
+            <div class="d-flex">
+              <div><i class="bi bi-credit-card fs-3 me-3"></i></div>
+              <div>
+                <h6>Auto Debit</h6>
+                <p><strong>Ketersediaan:</strong> ${autoDebit.availability}</p>
+                <p class="mb-0"><strong>Registrasi:</strong> ${autoDebit.registration}</p>
+              </div>
+            </div>
+          `);
+          }
+        }).fail(function () {
+          alert(
+            "Gagal memuat data tagihan lingkungan. Silakan coba kembali nanti."
+          );
+        });
+      });
+
+      // Helper function to format numbers with thousand separators
+      function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      }
+    </script>
+  </body>
+</html>
